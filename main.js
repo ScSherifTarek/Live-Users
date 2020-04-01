@@ -22,8 +22,11 @@ function submitUserForm()
     	age: $("#user-form #age").val()
     })
     
-    $("#user-form").find("input").val("");
+    let formInputs = $("#user-form").find("input");
+    formInputs.val("");
+    formInputs.first().focus();
 
+    addNotification('A new user is entering 🎉', `${name} is entering`);
     return false;
 }
 
@@ -37,6 +40,7 @@ function addUser(user)
 		data: JSON.stringify(user),
 		success: function(data) {
 			users.data = user;
+			addNotification(`Welcome ${name} to you home 🤗`, `Welcome ${name}, here are your seat. please stay here as you can`);
 		}
 	});
 }
@@ -81,6 +85,7 @@ function makeUserRow(user, id, number)
 
 function deleteUser(id)
 {
+	addNotification('A user is leaving 😢', `${users[id].name} is leaving`);
 	$.ajax({
 		accept: "application/json",
 		type: "DELETE",
@@ -88,6 +93,43 @@ function deleteUser(id)
 		url: DATABASE_URL+"users/"+id+".json",
 		success: function() {
 			delete users.id;
+			addNotification('Good bye our valuable user 👋', `User ${users[id].name} just gone away`);
 		}
 	});
+}
+
+function addNotification(heading, body)
+{
+	let id = string_to_slug(body)+Math.floor(Math.random()*10000);
+	$('#notifications').append(` 
+		<div id="${id}"class="toast" role="alert" data-delay="3000" data-autohide="true" >
+	        <div class="toast-header">
+	            <strong class="mr-auto text-primary">${heading}</strong>
+	            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+	                <span aria-hidden="true">×</span>
+	            </button>
+	        </div>
+	        <div class="toast-body">${body}</div>
+	    </div>
+	 `);
+
+	$("#"+id).toast('show');
+}
+
+function string_to_slug(str) {
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+  
+    // remove accents, swap ñ for n, etc
+    var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+    var to   = "aaaaeeeeiiiioooouuuunc------";
+    for (var i=0, l=from.length ; i<l ; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
 }
