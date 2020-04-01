@@ -40,7 +40,7 @@ function addUser(user)
 		data: JSON.stringify(user),
 		success: function(data) {
 			users.data = user;
-			addNotification(`Welcome ${name} to you home 🤗`, `Welcome ${name}, here are your seat. please stay here as you can`);
+			addNotification(`Welcome ${name} to your home 🤗`, `Welcome ${name}, here are your seat. please stay here as you can`);
 		}
 	});
 }
