@@ -1,5 +1,6 @@
-const DATABASE_URL = "https://first-project-6962b.firebaseio.com/";
-const USERS_DATABASE_URL = DATABASE_URL+"users.json";
+const DATABASE_HOST = "https://first-project-6962b.firebaseio.com/";
+const USERS_DATABASE_NAME = "users_test";
+const USERS_DATABASE_URL = DATABASE_HOST + USERS_DATABASE_NAME + ".json";
 let users = {};
 
 $(document).ready(function() {
@@ -90,7 +91,7 @@ function deleteUser(id)
 		accept: "application/json",
 		type: "DELETE",
 		contentType: "application/json",
-		url: DATABASE_URL+"users/"+id+".json",
+		url: DATABASE_HOST+USERS_DATABASE_NAME+"/"+id+".json",
 		success: function() {
 			delete users.id;
 			addNotification('Good bye our valuable user 👋', `User ${users[id].name} just gone away`);
